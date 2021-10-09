@@ -11,11 +11,10 @@ namespace EC.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class SlidesController : MvcControllerBase<SlidesController>
     {
         [HttpGet]
-        [AllowAnonymous]
+
         public async Task<IActionResult> GetAll()
         {
             var slides = await Mediator.Send(new SlideGetAllQueries() { });

@@ -19,11 +19,9 @@ namespace EC.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class ProductsController : MvcControllerBase<ProductsController>
     {
         [HttpGet("{productId}")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetById(int productId)
         {
             var product = await Mediator.Send(new GetById() { 
@@ -32,14 +30,12 @@ namespace EC.API.Controllers
             return Ok(product);
         }
         [HttpGet("paging")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetAllPaging([FromQuery] GetManageProductPagingRequest request)
         {
             var products = await Mediator.Send(Mapper.Map<GetManageProductPagingRequest, GetAllPagingQueries>(request));
             return Ok(products);
         }
         [HttpGet("featured/{take}")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetFeaturedProducts(int take)
         {
             var products = await Mediator.Send(new GetFeaturedProducts()
@@ -49,7 +45,6 @@ namespace EC.API.Controllers
             return Ok(products);
         }
         [HttpGet("latest/{take}")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetLatestProducts(int take, string languageId)
         {
             var products = await Mediator.Send(new GetLatestProducts()

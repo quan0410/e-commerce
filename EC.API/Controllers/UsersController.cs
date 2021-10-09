@@ -1,7 +1,6 @@
-﻿using EC.APPLICATION.Business.AuthenticationFuntions;
+﻿
 using EC.APPLICATION.Business.UserFuntions.Commands.DeleteCommand;
 using EC.APPLICATION.Business.UserFuntions.Commands.RegisterCommand;
-using EC.APPLICATION.Business.UserFuntions.Commands.RoleAssignCommand;
 using EC.APPLICATION.Business.UserFuntions.Commands.UpdateCommand;
 using EC.APPLICATION.Business.UserFuntions.Queries.ReadQuery;
 using EC.APPLICATION.Business.UserFuntions.Queries.SearchQuery;
@@ -18,27 +17,9 @@ namespace EC.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class UsersController : MvcControllerBase<UsersController>
     {
-        [HttpPost("authenticate")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Authenticate([FromBody] LoginRequest request)
-        {
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var resultToken = await Mediator.Send(Mapper.Map<LoginRequest, AuthencateQueries>(request));
-            if (string.IsNullOrEmpty(resultToken.ResultObj))
-            {
-                return BadRequest(resultToken);
-            }
-            return Ok(resultToken);
-        }
         [HttpPost]
-        [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
             if (!ModelState.IsValid)
@@ -95,22 +76,6 @@ namespace EC.API.Controllers
             var result = await Mediator.Send(new DeleteUserCommand() { Id = id });
             return Ok(result);
         }
-        [HttpPut("{id}/roles")]
-        public async Task<IActionResult> RoleAssign(Guid id, [FromBody] RoleAssignRequest request)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var result = await Mediator.Send(new RoleAssignCommand()
-            {
-                Id = id,
-                Roles = request.Roles
-            });
-            if (!result.IsSuccessed)
-            {
-                return BadRequest(result);
-            }
-            return Ok(result);
-        }
+       
     }
 }
